@@ -13,7 +13,6 @@
 \usepackage{hyperref, todonotes}
 
 
-
 \title{Environment mapping with a mobile robot \\
 \Large MSc thesis diary}
 \author{Laszlo Debreczeni}
@@ -26,27 +25,118 @@
 \tableofcontents
 \newpage
 
-\section{March 28 -- April 2}
+\section{May 28 -- June 4}
+\section{May 21 -- May 28}
+\section{May 14 -- May 21}
+\section{May 07 -- May 14}
+\section{April 30 -- May 07}
+\subsection{Reading}
+Some links on neural 3D maps:
 \begin{itemize}
-\item read about neural radiance fields \url{https://www.youtube.com/@thenerfguru}
-\item read about 3D Gaussian Splatting \url{https://www.youtube.com/watch?v=VkIJbpdTujE}
-\item try LumaAI \url{https://lumalabs.ai/} with iPhone RGBD
-\item optionally try a 3D Gaussian Splatting reconstruction of your room (requires GPU) 
+\item NerfNavigation: Vision-Only Robot Navigation in a Neural Radiance World, \url{https://mikh3x4.github.io/nerf-navigation/}
+\item Motion Planning with Implicit Neural Representations of Geometry, \url{https://neural-implicit-workshop.stanford.edu/}
+\item Splat-Nav: Safe Real-Time Robot Navigation in Gaussian Splatting Maps, \url{https://arxiv.org/abs/2403.02751}
+\item SplaTAM: Splat, Track \& Map 3D Gaussians for Dense RGB-D SLAM\url{https://spla-tam.github.io/}
+\item \url{https://github.com/zubair-irshad/Awesome-Implicit-NeRF-Robotics?tab=readme-ov-file#planningnavigation}
 \end{itemize}
-\newpage
 
-\section{March 21 -- March 28}
+
+\section{April 23 -- April 30}
+
+\subsection{Reading}
+Literature search about 3D map representations for robot/drone navigation: point cloud map, voxel map, triangle mesh map, 3DGS map, topological map. Which one is the best for 3D camera-based navigation? Which ones can we create with the Turtlebot's sensors?
+
+Some links on traditional 3D maps:
+\begin{itemize}
+\item Octomap: \url{https://octomap.github.io/}
+\item Voxblox: Oleynikova - Voxblox: Incremental 3D Euclidean Signed Distance Fields for On-Board MAV Planning, 
+\item VoxboxPlanning: \url{https://github.com/ethz-asl/mav_voxblox_planning}
+\item MeshNavigation \url{https://github.com/naturerobots/mesh_navigation}
+\item RTAB-Map: \url{https://introlab.github.io/rtabmap/}
+\item maplab, maplab 2.0 \url{https://maplab.asl.ethz.ch/docs/master/index.html}
+\end{itemize}
+
+\section{April 16 -- April 23}
 
 \subsection{Tasks}
 \begin{itemize}
-\item Create own ROS2 workspace and create an own ROS2 node \url{https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html} \todo[color=green!30]{DONE}
-\item test SpectacularAI SDK \url{https://github.com/SpectacularAI/sdk-examples} \todo[color=blue!30]{IN PROGRESS}
-\item VIO record, replay, visu \url{https://github.com/SpectacularAI/sdk-examples/tree/main/python/oak}
-\item ROS wrapper: \url{https://github.com/SpectacularAI/sdk-examples/tree/main/python/oak/ros2}
-\item Mapping ROS \url{https://github.com/SpectacularAI/sdk-examples/blob/main/python/oak/mapping_ros.py}
+\item person detector + estimate 3D position of person
+\item try DepthAI RTAB-Map ROS \url{https://github.com/luxonis/depthai-ros/blob/humble/depthai_ros_driver/launch/rtabmap.launch.py}
+\item Optional: try RTAB-MAP iOS \url{https://apps.apple.com/ca/app/rtab-map-3d-lidar-scanner/id1564774365}
+\item try to load and continue a SPAI map
+\end{itemize}
+\newpage
 
-\item create a point cloud reconstruciton of your room
-\url{https://www.youtube.com/watch?v=n34dt-Ag1Yo}
+
+\section{April 9 -- April 16}
+\subsection{Reading}
+\begin{itemize}
+\item 3D Gaussian Splatting, \url{https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/}
+\end{itemize}
+
+\subsection{Tasks}
+\begin{itemize}
+\item SPAI point cloud map saving and loading, SPAI localization \todo[color=green!30]{DONE}
+\item SPAI keyframe+pose saving \todo[color=green!30]{DONE}
+\item SPAI mesh saving (optional, if possible) \todo[color=green!30]{DONE}
+\item convert SPAI dataset to NerfStudio dataset, reconstruct your room with NerfStudio's gsplat implementation \todo[color=blue!30]{IN PROGRESS}
+\item Can you write a script that converts a SPAI dataset into an input dataset for the original 3DGS?\url{https://github.com/graphdeco-inria/gaussian-splatting} Alternatively, can you create a script that converts a NerfStudio dataset to an input dataset for the original 3DGS?
+\item try a 3D Gaussian Splatting reconstruction of your room (requires GPU) 
+\item try SuperSplat 3DGS editor (for your LumaAI model) \url{https://playcanvas.com/supersplat/editor}
+\item try Web-based 3DGS viewer \url{https://github.com/mkkellogg/GaussianSplats3D}
+\end{itemize}
+
+\subsection{Achievements}
+\begin{itemize}
+    \item SPAI point cloud map can be saved by the mapping example. We can export optimized point clouds in ply and pcd formats with \verb|sai-cli|
+    \item I could not figure out how could we load and visualize the saved point cloud map yet.
+    \item The keyframes and poses can be extracted from the mapping with the help of \verb|sai-cli process|. It saves the keyframes as images and the corresponding 3D points.
+    \item The mesh cannot be saved by the pure SDK examples. A video can be used to create the mesh on it and a map can be loaded for the example.
+    \item When trying to use the nerfstudio's splatfacto model (Gaussian Splatting), the dromni's docker image throws a CUDA error. The nerfstudio's official image throws this error:\par
+    assert block\_width \verb|>| 1 and block\_width \verb|<|= 16, "block\_width must be between 2 and 16"
+    AssertionError: block\_width must be between 2 and 16\par
+    It is a problem with nerfstudio and/or gsplat. I tried installing older gsplat versions but the problem remained.
+\end{itemize}
+
+Gabor: point clouds can be opened and edited by MeshLab or CloudCompare
+\newpage
+
+
+\section{March 28 -- April 9}
+\subsection{Reading}
+\begin{itemize}
+    \item read about neural radiance fields \url{https://www.youtube.com/@thenerfguru}
+    \item read about 3D Gaussian Splatting \url{https://www.youtube.com/watch?v=VkIJbpdTujE}
+\end{itemize}
+
+\subsection{Tasks}
+\begin{itemize}
+\item try LumaAI \url{https://lumalabs.ai/} with iPhone RGBD \todo[color=green!30]{DONE}
+\item convert SPAI dataset to NerfStudio dataset (SPAI script does that) \todo[color=green!30]{DONE}
+\item optionally try a NeRFStudio reconstruction of your room (requires GPU) \todo[color=green!30]{DONE}
+\end{itemize}
+
+\subsection{Achievements}
+\begin{itemize}
+    \item LumaAI: \url{https://lumalabs.ai/capture/00CC75E0-E9C1-42C2-8530-C8D8995CF6A9}
+    \item SPAI dataset to NeRFStudio dataset: \verb|sai-cli| command can do that
+    \item For the room reconstruction see the previous week's achievements
+\end{itemize}
+
+\newpage
+
+
+
+\section{March 21 -- March 28}
+\subsection{Tasks}
+\begin{itemize}
+\item Create own ROS2 workspace and create an own ROS2 node \url{https://docs.ros.org/en/foxy/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html} \todo[color=green!30]{DONE}
+\item test SpectacularAI SDK \url{https://github.com/SpectacularAI/sdk-examples} \todo[color=green!30]{DONE}
+\item VIO record, replay, visu \url{https://github.com/SpectacularAI/sdk-examples/tree/main/python/oak} \todo[color=green!30]{DONE}
+\item ROS wrapper: \url{https://github.com/SpectacularAI/sdk-examples/tree/main/python/oak/ros2} \todo[color=green!30]{DONE}
+\item Mapping ROS \url{https://github.com/SpectacularAI/sdk-examples/blob/main/python/oak/mapping_ros.py}: This works only with ROS1!
+\item create a point cloud reconstruction of your room
+\url{https://www.youtube.com/watch?v=n34dt-Ag1Yo} \todo[color=green!30]{DONE}
 \end{itemize}
 
 \subsection{Achievements}
@@ -62,10 +152,117 @@ SpectacularAI WARN:   VIO may be running too slow, data is being input too fast,
         \includegraphics[width=1\linewidth]{spectacular_ai_vio_visu.png}
         \captionof{figure}{IMU visualization}
     \end{minipage}
+    \item 3D Pen: if you cover the camera with your hand, you can draw in the air. Video: videos/spectacular\_ai\_3d\_pen.webm
+    \item If you want to make the \verb|mapping_visu.py| work, you have to comment out a several lines inside \verb|OpenGL/contexdata.py|:
+    \begin{verbatim}
+        def getContext( context = None ):
+    """Get the context (if passed, just return)
+    
+    context -- the context ID, if None, the current context
+    """
+    if context is None:
+        context = platform.GetCurrentContext()
+        # if context == 0:
+        #     from OpenGL import errorS
+        #     raise error.Error(
+        #         """Attempt to retrieve context when no valid context"""
+        #     )
+    return context
+    \end{verbatim}
+    After this, it should work like a charm:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{spectacular_ai_mapping_visu.png}
+        \captionof{figure}{Mapping visualization}
+    \end{minipage}
+    \item Mapping AR: it can create a mesh and point cloud representation of the surroundings:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{spectacular_ai_mapping_ar_mesh1.png}
+        \captionof{figure}{Mapping AR with mesh}
+    \end{minipage}
+    \par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{spectacular_ai_mapping_ar_mesh2.png}
+        \captionof{figure}{Mapping AR with mesh}
+    \end{minipage}
+    \par
+    The point cloud representation was more informative:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{spectacular_ai_mapping_ar_pc1.png}
+        \captionof{figure}{Mapping AR with point cloud}
+    \end{minipage}
+    \par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{spectacular_ai_mapping_ar_pc2.png}
+        \captionof{figure}{Mapping AR with point cloud}
+    \end{minipage}
+    \par
+    \item There is an example where ros2 is used for mapping and you can view the created point cloud in RViz:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{spectacular_ai_mapping_ros2.png}
+        \captionof{figure}{Mapping with ROS2 and RViz}
+    \end{minipage}\par
+    You can see the chairs, table and fridge clearly, this works awesome!
+    \item One of the most spectacular example is the one that uses depthai. It can detect objects and place them in space with absolute positions:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/spectacular_ai_depthai_combination.png}
+        \captionof{figure}{Object detection and position estimation with DepthAI}
+    \end{minipage}\par
+    You can modify the source to detect specific objects. I modified the axes' bounds too so the objects' position is inside the bounding box.
+    \item The mixed reality example places a cube in front of the camera's initial position and it stays there (though it shakes a bit sometimes) so you can move the camera around it:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/spectacular_ai_mixed_reality.png}
+        \captionof{figure}{Mixed reality cube}
+    \end{minipage}\par
+    \item According to the documentation, AprilTags can be used too.
+    \item Point cloud reconstruction of my room:
+    \begin{itemize}
+        \item I used the SpectacularAI's \verb|mapping.py| script to create videos with the camera
+        \item The \verb|sai-cli process| command creates the keyframes for the NeRF\par
+        \begin{minipage}{\linewidth}
+            \centering
+            \includegraphics[width=1\linewidth]{images/sai-cli_process.png}
+            \captionof{figure}{sai-cli command for creating input for NeRF}
+        \end{minipage}\par
+        \item Then I used nerfstudio in Docker to create the scene:\par
+        \begin{verbatim}
+            sudo docker run --gpus all \
+            -u $(id -u) \
+            -v /home/laci/mappings/:/workspace/ \
+            -v /home/laci/.cache/:/home/user/.cache \
+            -p 7007:7007 --rm -it \
+            --shm-size=1gb dromni/nerfstudio:1.0.3
+        \end{verbatim}
+        \item You can train the NeRF with the \verb|ns-train ns-train nerfacto --data PATH_TO_DATA| command
+        \item You need to have the nVidia driver installed to be able to do this. \par
+        \begin{minipage}{\linewidth}
+            \centering
+            \includegraphics[width=1\linewidth]{images/nerfstudio.png}
+            \captionof{figure}{nerfstudio during training}
+        \end{minipage}\par
+        \item After the training has completed you can view the trained model with:\par
+        \begin{verbatim}
+            ns-viewer --load-config /workspace/outputs/done/nerfacto/2024-04-05_202416/config.yml
+        \end{verbatim}\par
+        \begin{minipage}{\linewidth}
+            \centering
+            \includegraphics[width=1\linewidth]{images/trained_nerf_karcag1.png}
+            \captionof{figure}{Trained NeRF in our living room in Karcag}
+        \end{minipage}\par
+        \item At some poses the rendering was not so successful because I did not took enough time to shoot the room thoroughly with the camera.
+        
+    \end{itemize}
 
+    \item It would be interesting to try 3DGS and compare it with nerfstudio: \url{https://github.com/graphdeco-inria/gaussian-splatting}
     
 \end{itemize}
-
 
 \newpage
 

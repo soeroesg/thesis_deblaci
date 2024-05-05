@@ -25,10 +25,19 @@
 \tableofcontents
 \newpage
 
+\section{Nice tools}
+\begin{itemize}
+    \item Online ply viewer which works with big files: \url{https://point.love/}
+    \item Online GSplat viewer (drag and drop a .ply file): \url{https://antimatter15.com/splat/}
+    \item SuperSplat: \url{https://playcanvas.com/supersplat/editor}
+\end{itemize}
+
 \section{May 28 -- June 4}
 \section{May 21 -- May 28}
 \section{May 14 -- May 21}
 \section{May 07 -- May 14}
+\newpage
+
 \section{April 30 -- May 07}
 \subsection{Reading}
 Some links on neural 3D maps:
@@ -39,7 +48,7 @@ Some links on neural 3D maps:
 \item SplaTAM: Splat, Track \& Map 3D Gaussians for Dense RGB-D SLAM\url{https://spla-tam.github.io/}
 \item \url{https://github.com/zubair-irshad/Awesome-Implicit-NeRF-Robotics?tab=readme-ov-file#planningnavigation}
 \end{itemize}
-
+\newpage
 
 \section{April 23 -- April 30}
 
@@ -51,22 +60,41 @@ Some links on traditional 3D maps:
 \item Octomap: \url{https://octomap.github.io/}
 \item Voxblox: Oleynikova - Voxblox: Incremental 3D Euclidean Signed Distance Fields for On-Board MAV Planning, 
 \item VoxboxPlanning: \url{https://github.com/ethz-asl/mav_voxblox_planning}
+\item nvBlox \url{https://nvblox.readthedocs.io/en/latest/} -- top priority
 \item MeshNavigation \url{https://github.com/naturerobots/mesh_navigation}
 \item RTAB-Map: \url{https://introlab.github.io/rtabmap/}
 \item maplab, maplab 2.0 \url{https://maplab.asl.ethz.ch/docs/master/index.html}
 \end{itemize}
+\newpage
 
 \section{April 16 -- April 23}
 
 \subsection{Tasks}
 \begin{itemize}
-\item person detector + estimate 3D position of person
-\item try DepthAI RTAB-Map ROS \url{https://github.com/luxonis/depthai-ros/blob/humble/depthai_ros_driver/launch/rtabmap.launch.py}
+\item person detector + estimate 3D position of person \todo[color=blue!30]{IN PROGRESS}
+\item try DepthAI RTAB-Map ROS \url{https://github.com/luxonis/depthai-ros/blob/humble/depthai_ros_driver/launch/rtabmap.launch.py} \todo[color=blue!30]{IN PROGRESS}
 \item Optional: try RTAB-MAP iOS \url{https://apps.apple.com/ca/app/rtab-map-3d-lidar-scanner/id1564774365}
 \item try to load and continue a SPAI map
 \end{itemize}
-\newpage
 
+\subsection{Achievements}
+\begin{itemize}
+    \item Person position estimation: with the help of the luxonis sdk-examples, we can estimate a person's position with the \verb|depthai_combination.py| script. X: horizontal position, Y: vertical position, Z: distance from the camera. It uses the camera's frame but we can easily calculate the world coordinates with the help of \url{https://docs.luxonis.com/projects/api/en/latest/components/nodes/spatial_location_calculator/}
+    \item DepthAI ros \verb|ros2 launch depthai_ros_driver camera.launch.py| with RViz2:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/depthai_ros_camera.png}
+        \captionof{figure}{Camera's image in RViz2}
+    \end{minipage}
+    \item When I tried running the \verb|ros2 launch depthai_ros_driver rtabmap.launch.py| command it did not found the \url{https://github.com/introlab/rtabmap_ros/tree/ros2#rtabmap_ros} package so I installed it. After this it was running fine but due to midnight I could not test it thoroughly.\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/rtabmap_ros.png}
+        \captionof{figure}{RTabmap in action}
+    \end{minipage}
+    
+\end{itemize}
+\newpage
 
 \section{April 9 -- April 16}
 \subsection{Reading}
@@ -79,11 +107,11 @@ Some links on traditional 3D maps:
 \item SPAI point cloud map saving and loading, SPAI localization \todo[color=green!30]{DONE}
 \item SPAI keyframe+pose saving \todo[color=green!30]{DONE}
 \item SPAI mesh saving (optional, if possible) \todo[color=green!30]{DONE}
-\item convert SPAI dataset to NerfStudio dataset, reconstruct your room with NerfStudio's gsplat implementation \todo[color=blue!30]{IN PROGRESS}
-\item Can you write a script that converts a SPAI dataset into an input dataset for the original 3DGS?\url{https://github.com/graphdeco-inria/gaussian-splatting} Alternatively, can you create a script that converts a NerfStudio dataset to an input dataset for the original 3DGS?
-\item try a 3D Gaussian Splatting reconstruction of your room (requires GPU) 
-\item try SuperSplat 3DGS editor (for your LumaAI model) \url{https://playcanvas.com/supersplat/editor}
-\item try Web-based 3DGS viewer \url{https://github.com/mkkellogg/GaussianSplats3D}
+\item convert SPAI dataset to NerfStudio dataset, reconstruct your room with NerfStudio's gsplat implementation \todo[color=green!30]{DONE}
+\item Can you write a script that converts a SPAI dataset into an input dataset for the original 3DGS?\url{https://github.com/graphdeco-inria/gaussian-splatting} Alternatively, can you create a script that converts a NerfStudio dataset to an input dataset for the original 3DGS?\todo[color=green!30]{DONE}
+\item try a 3D Gaussian Splatting reconstruction of your room (requires GPU) \todo[color=green!30]{DONE}
+\item try SuperSplat 3DGS editor (for your LumaAI model) \url{https://playcanvas.com/supersplat/editor} \todo[color=green!30]{DONE}
+\item try Web-based 3DGS viewer \url{https://github.com/mkkellogg/GaussianSplats3D} \todo[color=green!30]{DONE}
 \end{itemize}
 
 \subsection{Achievements}
@@ -96,9 +124,19 @@ Some links on traditional 3D maps:
     assert block\_width \verb|>| 1 and block\_width \verb|<|= 16, "block\_width must be between 2 and 16"
     AssertionError: block\_width must be between 2 and 16\par
     It is a problem with nerfstudio and/or gsplat. I tried installing older gsplat versions but the problem remained.
+    \item I tried the Nerfstudio's splatfacto model once more and now it started training. The only issue with this is the following: I have a GTX1660 in my laptop with 6GB of VRAM and it is not enough for it. I always get a \verb|CUDA out of memory| error, because the model is not optimized for lower VRAMs.
+    \item SPAI to 3DGS: the output of the \verb|sai-cli| command are a COLMAP and the keyframe images, this can be used by the 3DGS.
+    \item I tried the original GSplat \url{https://github.com/graphdeco-inria/gaussian-splatting}. It worked for me except the \verb|CUDA out of memory error| Gabor: point clouds can be opened and edited by MeshLab or CloudCompare
+    \item I tried using Google Colab for training the Gaussian Splatting:
+    \begin{itemize}
+        \item It worked for 1000, 2000, 5000 iterations with 150 images so far.
+        \item It does not work for 7000 or more iterations with 150 images.
+    \end{itemize}
+\item I have tried SuperSplat but I could not export the .ply file from my LumaAI model (it only supports its own web browser, I could not export any files from it, only a link that opens the LumaAI's online viewer)
+\item I did not install the mkkellogg's web based 3DGS viewer, there is a webpage where you can try it out without installing. The original \verb|gaussian-splatting|'s \verb|SIBR Viewer| was faster, more robust and it was easier to use.
 \end{itemize}
 
-Gabor: point clouds can be opened and edited by MeshLab or CloudCompare
+
 \newpage
 
 
@@ -224,8 +262,8 @@ SpectacularAI WARN:   VIO may be running too slow, data is being input too fast,
     \item According to the documentation, AprilTags can be used too.
     \item Point cloud reconstruction of my room:
     \begin{itemize}
-        \item I used the SpectacularAI's \verb|mapping.py| script to create videos with the camera
-        \item The \verb|sai-cli process| command creates the keyframes for the NeRF\par
+        \item I used the SpectacularAI's \verb|mapping_visu.py| script to create videos with the camera (\verb|python3 mapping_visu.py --recordingFolder /PATH/TO/FOLDER|)
+        \item The \verb|sai-cli process| command creates the keyframes for the NeRF \verb|sai-cli process --format FORMAT --preview --preview3d INPUT OUTPUT|\par
         \begin{minipage}{\linewidth}
             \centering
             \includegraphics[width=1\linewidth]{images/sai-cli_process.png}
@@ -240,7 +278,7 @@ SpectacularAI WARN:   VIO may be running too slow, data is being input too fast,
             -p 7007:7007 --rm -it \
             --shm-size=1gb dromni/nerfstudio:1.0.3
         \end{verbatim}
-        \item You can train the NeRF with the \verb|ns-train ns-train nerfacto --data PATH_TO_DATA| command
+        \item You can train the NeRF with the \verb|ns-train nerfacto --data PATH_TO_DATA| command
         \item You need to have the nVidia driver installed to be able to do this. \par
         \begin{minipage}{\linewidth}
             \centering
@@ -337,7 +375,7 @@ example citation \cite{Macenski2021}
     \item  \url{https://shop.luxonis.com/collections/product-guide}
 \end{itemize}
 
-\item read about ROS2 \url{https://github.com/ros2/ros2}\todo[color=blue!30]{IN PROGRESS}
+\item read about ROS2 \url{https://github.com/ros2/ros2}\todo[color=green!30]{DONE}
 
 
 \end{itemize}
@@ -347,11 +385,35 @@ example citation \cite{Macenski2021}
 \begin{itemize}
     \item Install Ubuntu 22\todo[color=green!30]{DONE}
     \item Install ROS2 Humble \url{http://docs.ros.org/en/humble/}\todo[color=green!30]{DONE}
-    \item Basic ROS2 tutorials \url{http://docs.ros.org/en/humble/Tutorials.html}\todo[color=blue!30]{IN PROGRESS}
-    \item Try out \url{https://turtlebot.github.io/turtlebot4-user-manual/software/turtlebot4_simulator.html}
-    \item Try out \url{https://turtlebot.github.io/turtlebot4-user-manual/software/rviz.html}
-    \item Try out \url{https://turtlebot.github.io/turtlebot4-user-manual/software/simulation.html}
-    \item Try out on the robot: \url{https://turtlebot.github.io/turtlebot4-user-manual/tutorials/}
+    \item Basic ROS2 tutorials \url{http://docs.ros.org/en/humble/Tutorials.html}\todo[color=green!30]{DONE}
+    \item Try out \url{https://turtlebot.github.io/turtlebot4-user-manual/software/turtlebot4_simulator.html}\todo[color=green!30]{DONE}
+    \item Try out \url{https://turtlebot.github.io/turtlebot4-user-manual/software/rviz.html}\todo[color=green!30]{DONE}
+    \item Try out \url{https://turtlebot.github.io/turtlebot4-user-manual/software/simulation.html}\todo[color=green!30]{DONE}
+    \item Try out on the robot: \url{https://turtlebot.github.io/turtlebot4-user-manual/tutorials/}\todo[color=gray!30]{TODO}
+\end{itemize}
+
+\subsection{Achievements}
+\begin{itemize}
+    \item Read about Turtlebot4, ROSBot2, SPAI, DepthAI/OAK-D and ROS2
+    \item Installed Ubuntu 22.04
+    \item Installed ROS2 Humble
+    \item Completed some basic ROS2 tutorials to get the hang of it
+    \item Tried out the Turtlebot4 simulation model on Gazebo:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/Gazebo_turtlebot4.png}
+        \captionof{figure}{Turtlebot4 model in Gazebo}
+    \end{minipage}
+
+    \item Inspected the robot in RViz2 (Gazebo must be running to simulate the robot):\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/rviz2_turtlebot4.png}
+        \captionof{figure}{Turtlebot4 in RViz (simulated by Gazebo)}
+    \end{minipage}
+    
+    \item Unfortunately I could not drive the simulated robot with the \verb|teleop_twist_keyboard| node
+    
 \end{itemize}
 
 \newpage

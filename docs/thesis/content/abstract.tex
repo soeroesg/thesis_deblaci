@@ -1,0 +1,37 @@
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\selecthungarian
+
+%----------------------------------------------------------------------------
+% Abstract in Hungarian
+%----------------------------------------------------------------------------
+\chapter*{Kivonat}\addcontentsline{toc}{chapter}{Kivonat}
+
+Jelenleg az iparban egyre fontosabb szerepet töltenek be a mobilis robotok\cite{MobRobots}. Egyik legelterjedtebb felhasználásuk raktári környezetben történik, ahol képesek különböző rakományok szállítására. Ehhez első körben szükséges a környezet feltérképezése, mely manapság egy rendkívül gyakran kutatott téma, a robotika gyorsan fejlődő szegmense.
+
+A feltérképezés alapvető eszközei a LIDAR-ok illetve különböző mélységi kamerák. LIDAR-ból létezik 2D-s és 3D-s változat, ugyanakkor az utóbbit ritkán alkalmazzák borsos ára miatt. Amennyiben 3D-s feltérképezést szeretnénk használni (amely sokkal több lehetőséggel kecsegtet), érdemesebb inkább valamilyen mélységi kamerát használnunk. Ez lehet RGB-D\cite{RGB-D} vagy sztereó\cite{Stereo}. Ezen kamerák használatával nem csupán pontfelhőt tudunk felépíteni a környezetünkről, hanem akár képesek lehetünk különböző objektumok detektálására is. Ez azért fontos, mert egy raktárban szükséges lehet emberek kikerülésére, illetve követésére.
+
+Feladatom megvizsgálni, milyen módon alkalmazhatunk mélységi kamerákat mobilis robotokon környezetfeltérképezésre, illetve emberfelismerésre. A feltérképezés közben, illetve után (már a tájékozódás közben) célom a felismert személyeket kikerülni/követni a robottal. Jelen munkát a Nokia Bell Labs-nél végeztem Budapesten. A konzulensem, dr. Sörös Gábor, illetve a Nokia segítségével lehetőségem nyílt a munkámat egy Turtlebot4\footnote{Ismertető a robotról: \url{https://clearpathrobotics.com/turtlebot-4/}} roboton végezni. Az eszközön található egy OAK-D Pro\footnote{Ismertető a kameráról: \url{https://shop.luxonis.com/products/oak-d-pro?variant=42455252369631}} kamera, amely segítségével elvégezhettem a feltérképezést és felismerést.
+
+\vfill
+\selectenglish
+
+
+%----------------------------------------------------------------------------
+% Abstract in English
+%----------------------------------------------------------------------------
+\chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
+
+Currently, mobile robots play an increasingly important role in industry\cite{MobRobots}. One of their most common uses is in a warehouse environment, where they can transport different loads. This first requires mapping the environment, which is a frequently researched topic these days and a rapidly developing segment of robotics.
+
+The basic tools for mapping are LIDARs and various depth cameras. There are 2D and 3D versions of LIDAR, but the latter is rarely used due to its high price. If we want to use 3D mapping (which promises much more possibilities), it is better to use some kind of depth camera. This can be RGB-D\cite{RGB-D} or stereo\cite{Stereo}. By using these cameras, we can not only build a point cloud of our surroundings, but also be able to detect different objects around us. This is important because it may be necessary to avoid or follow people in a warehouse.
+
+My task is to investigate how we can use depth cameras on mobile robots for environmental mapping and human recognition. During and after the mapping (during localization), my aim is to avoid/follow the recognized persons with the robot. I wrote this thesis at Nokia Bell Labs in Budapest. With the help of my advisor, dr. Gábor Sörös, and Nokia I had the opportunity to work on a Turtlebot4\footnote{Description about the robot: \url{https://clearpathrobotics.com/turtlebot-4/}}. The device has an OAK-D Pro\footnote{Description about the camera: \url{https://shop.luxonis.com/products/oak-d-pro?variant=42455252369631}} camera, which I was able to use for mapping and recognition.
+
+\vfill
+\selectthesislanguage
+
+\newcounter{romanPage}
+\setcounter{romanPage}{\value{page}}
+\stepcounter{romanPage}

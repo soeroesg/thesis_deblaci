@@ -18,4 +18,18 @@ One of the simplest examples is a robot vacuum cleaner. To make things more exci
 
 With this little example we reviewed the advantages of SLAM (Simultaneous localization and mapping) in a housekeeping environment. Mobile robots and SLAM can be used in various industrial environments, too. For example, autonomous robots can carry heavy products from one place to another in a huge warehouse. In these cases it is unimaginable that a wall-to-wall algorithm could achieve a proper navigation (it is questionable if it would even arrive to its goal before draining its battery). All in all, nowadays it is very important to use some SLAM algorithm.
 
+\section{Goal of the thesis}
 
+The aim of this thesis is to further develop the navigation and exploration capabilities of a mobile robot, so that it can independently explore its surroundings when it arrives at a new location and create a map. This map could be reused by it or other robots.
+
+The main goal is to use V-SLAM (Visual-SLAM) with a stereo camera instead of SLAM with a LIDAR. The reasons behind this choice are:
+\begin{itemize}
+    \item a camera can easily build 3D maps or point clouds of the robots' surroundings,
+    \item if the camera has RGB lenses than we can create colorful point clouds of its environment,
+    \item the camera can be used to detect specific objects.
+\end{itemize}
+One of our goals was to detect persons with the camera and prepare the robot to be able to follow or avoid them.
+
+\section{Structure of the thesis}
+
+TODO

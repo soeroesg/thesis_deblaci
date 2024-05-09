@@ -72,8 +72,22 @@ Spectacular AI\footnote{\url{https://www.spectacularai.com/}} provides an SDK\fo
 \begin{itemize}
     \item camera's image visualization,
     \item IMU's localization visualization,
+    \item point cloud mapping,
+    \item AR mapping with meshes or point clouds,
+    \item mapping with ROS2 visualization.
 \end{itemize}
 The main goal of the SDK is to lend us a hand when we want to do SLAM with an OAK camera. It supports working with ROS through some basic ROS nodes and bridges. The SDK's main strenght is the usage of the IMU and VPU in the OAK camera.
 
+Spectacular AI's SDK serves as a catalyst for innovation in computer vision applications, catering to a diverse range of industries and use cases. Its intuitive interface and comprehensive feature set make it a valuable tool for developers seeking to harness the full potential of OAK cameras in their projects.
+
 \section{Gaussian Splatting}
 
+Gaussian splatting\cite{3DGS} is a rendering technique that offers a unique approach to representing and visualizing three-dimensional scenes. Instead of relying on traditional surface or line primitives to render objects, Gaussian splatting employs "splats," which are essentially two-dimensional discs with Gaussian distribution characteristics. These splats are strategically placed within the scene based on key points extracted from images. By overlapping these splats, the technique reconstructs the underlying geometry and appearance of the scene.
+
+One of the primary advantages of Gaussian splatting lies in its ability to faithfully capture the intricacies of complex scenes without requiring an explicit representation of geometry. This makes it particularly useful in scenarios where the scene's geometry is challenging to model or where the available data is sparse or noisy. By leveraging the information from multiple viewpoints, Gaussian splatting can generate detailed and coherent renderings, even from limited input data.
+
+Recent advancements in the field, particularly in the realm of Neural Radiance Fields\cite{nerf} (NeRFs), have propelled the development of Gaussian splatting techniques to new heights. NeRFs, which are neural network-based models capable of synthesizing novel views of a scene from a sparse set of input images, have demonstrated remarkable success in generating high-fidelity renderings. By integrating Gaussian splatting with NeRFs, researchers have been able to achieve even more impressive results, enabling the generation of photorealistic renderings with enhanced efficiency and accuracy.
+
+The synergy between Gaussian splatting and NeRFs opens up exciting possibilities for various applications, including virtual reality, augmented reality, computer graphics, and beyond. As research in this area continues to evolve, we can expect further innovations that push the boundaries of what is possible in three-dimensional scene reconstruction and rendering.
+
+Our optional goal was to create photorealistic 3D models of the robot's environment from the images taken when mapping. This could be achieved with the help of Gaussian splatting. The result could be an environment's 3D model where we can place the robot's 3D model too and visualize its position real-time while it runs in localization mode using the discovered map.

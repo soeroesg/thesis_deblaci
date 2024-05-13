@@ -26,15 +26,16 @@ import sys
 import numpy as np
 import rclpy
 from rclpy.node import Node
+from geometry_msgs.msg import Point
 
 
 class PersonDetectorNode(Node):
 
     def __init__(self):
         super().__init__('person_detector')
-        self.publisher_ = self.create_publisher(PointCloud2, 'detected_persons', 10)
-        self.timer_ = self.create_timer(0.1, self.detect_persons)
-        self.depthai_device = dai.Device(self.make_pipeline())
+        self.publisher_ = self.create_publisher(Point, 'detected_persons', 10)
+        #self.timer_ = self.create_timer(0.1, self.detect_persons)
+        # self.depthai_device = dai.Device(self.make_pipeline())
 
 def make_pipelines(nnBlobPath, showRgb):
     syncNN = True
@@ -360,6 +361,7 @@ def draw_detections_on_rgb_frame(frame, detections, fps):
     cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
 
 if __name__ == '__main__':
+    rclpy.init()
     nnBlobPath = 'models/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob'
     if len(sys.argv) > 1:
         nnBlobPath = sys.argv[1]
@@ -372,6 +374,8 @@ if __name__ == '__main__':
 
     with dai.Device(pipeline) as device:
         visu_3d = MatplotlibVisualization()
+
+        detector_node = PersonDetectorNode()
 
         def main_loop():
             startTime = time.monotonic()
@@ -413,31 +417,51 @@ if __name__ == '__main__':
                         counter = 0
                         startTime = current_time
 
+
                     detections = inDet.detections
-                    with open('out.txt', 'w') as f:
-                        for detection in detections:
-                            print('X:', int(detection.spatialCoordinates.x), file=f)
-                            print('Y:', int(detection.spatialCoordinates.y), file=f)
-                            print('Z:', int(detection.spatialCoordinates.z), file=f)
-                                
-                    if len(detections) != 0:
-                        boundingBoxMapping = xoutBoundingBoxDepthMappingQueue.get()
-                        roiDatas = boundingBoxMapping.getConfigData()
+
+                    msg = Point()
+
+                    # This detects everything, not a good solution
+                    # for detection in detections:
+
+                    #     msg.x = detection.spatialCoordinates.x
+                    #     msg.y = detection.spatialCoordinates.y
+                    #     msg.z = detection.spatialCoordinates.z
+
+                    #     detector_node.publisher_.publish(msg)
+
+
+
+                    # if len(detections) != 0:
+                    #     boundingBoxMapping = xoutBoundingBoxDepthMappingQueue.get()
+                    #     roiDatas = boundingBoxMapping.getConfigData()
 
                     if vio_matrix is not None:
                         detections_world = tracker(current_time, detections, vio_matrix)
-                        visu_3d.update_detected_objects(detections_world)
+                        # visu_3d.update_detected_objects(detections_world)
 
-                    if showRgb:
-                        draw_detections_on_rgb_frame(frame, detections, fps)
-                        cv2.imshow("rgb", frame)
+                        # Coordinates do not match the real ones
 
-                    if cv2.waitKey(1) == ord('q'):
-                        break
+                        for detection in detections_world:
+                             msg.x = detection.position[0] # distance from camera
+                             msg.y = detection.position[1] # horizontal
+                             msg.z = detection.position[2] # vertical
+
+                             detector_node.publisher_.publish(msg)                        
+
+
+                    # if showRgb:
+                    #     draw_detections_on_rgb_frame(frame, detections, fps)
+                    #     cv2.imshow("rgb", frame)
+
+                    # if cv2.waitKey(1) == ord('q'):
+                    #     break
                 else:
                     time.sleep(0.005)
 
             vio_session.close()
 
-        visu_3d.start_in_parallel_with(main_loop)
+        # visu_3d.start_in_parallel_with(main_loop)
+        main_loop()
         

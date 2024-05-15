@@ -1,19 +1,14 @@
-"""
-Spatial AI demo combining Spectacular AI VIO with Tiny YOLO object detection
-accelerated on the OAK-D.
+"""Person detection with OAK-D and ROS2
 
-Requirements:
+The script uses an OAK-D camera and Spectacular AI to detect
+persons and then a ROS2 Node publishes its position
+relative to the camera onto the ``/detected_persons`` topic.
 
-    pip install opencv-python matplotlib
+Positions:
 
-To download the pre-trained NN model run following shell script (Git Bash recommended on Windows to run it):
-
-    ./depthai_combination_install.sh
-
-Plug in the OAK-D and run:
-
-    python examples/depthai_combination.py
-
+ - X: distance from camera
+ - Y: horizontal position
+ - Z: vertical position
 """
 import depthai as dai
 import time
@@ -34,8 +29,6 @@ class PersonDetectorNode(Node):
     def __init__(self):
         super().__init__('person_detector')
         self.publisher_ = self.create_publisher(Point, 'detected_persons', 10)
-        #self.timer_ = self.create_timer(0.1, self.detect_persons)
-        # self.depthai_device = dai.Device(self.make_pipeline())
 
 def make_pipelines(nnBlobPath, showRgb):
     syncNN = True
@@ -216,150 +209,6 @@ LABEL_MAP = [
 
 SELECTED_LABELS = ['person']
 
-def make_camera_wireframe(aspect=640/400., scale=0.05):
-    # camera "frustum"
-    corners = [[-1, -1], [1, -1], [1, 1], [-1, 1], [-1, -1]]
-    cam_wire = []
-    for x, y in corners:
-        cam_wire.append([x*aspect, y, 1])
-    for x, y in corners:
-        cam_wire.append([x*aspect, y, 1])
-        cam_wire.append([0, 0, 0])
-    return (scale * np.array(cam_wire)).tolist()
-
-class MatplotlibVisualization:
-    """
-    Interactive / real-time 3D line & point visualization using Matplotlib.
-    This is quite far from the comfort zone of MPL and not very extensible.
-    """
-    def __init__(self):
-        from mpl_toolkits.mplot3d import Axes3D
-        from matplotlib.animation import FuncAnimation
-
-        fig = plt.figure()
-        ax = Axes3D(fig, auto_add_to_figure=False)
-        fig.add_axes(ax)
-
-        ax_bounds = (-5, 5) # meters
-        ax.set(xlim=ax_bounds, ylim=ax_bounds, zlim=ax_bounds)
-        ax.view_init(azim=-140) # initial plot orientation
-
-        empty_xyz = lambda: { c: [] for c in 'xyz' }
-
-        vio_data = empty_xyz()
-        vio_data['plot'] = ax.plot(
-            xs=[], ys=[], zs=[],
-            linestyle="-",
-            marker="",
-            label='VIO trajectory'
-        )
-
-        vio_cam_data = empty_xyz()
-        vio_cam_data['plot'] = ax.plot(
-            xs=[], ys=[], zs=[],
-            linestyle="-",
-            marker="",
-            label='current cam pose'
-        )
-
-        detection_data = empty_xyz()
-        detection_data['labels'] = []
-        detection_data['plot'] = ax.plot(
-            xs=[], ys=[], zs=[],
-            linestyle="",
-            marker="o",
-            label=' or '.join(SELECTED_LABELS)
-        )
-
-        ax.legend()
-        ax.set_xlabel("x (m)")
-        ax.set_ylabel("y (m)")
-        ax.set_zlabel("z (m)")
-
-        #title = ax.set_title("Spatial AI demo")
-        def on_close(*args):
-            self.should_close = True
-
-        fig.canvas.mpl_connect('close_event', on_close)
-
-        self.cam_wire = make_camera_wireframe()
-        self.vio_data = vio_data
-        self.vio_cam_data = vio_cam_data
-        self.detection_data = detection_data
-        self.should_close = False
-
-        def update_graph(*args):
-            r = []
-            for graph in [self.vio_data, self.vio_cam_data, self.detection_data]:
-                p = graph['plot'][0]
-                x, y, z = [np.array(graph[c]) for c in 'xyz']
-                p.set_data(x, y)
-                p.set_3d_properties(z)
-                r.append(p)
-            return tuple(r)
-
-        self._anim = FuncAnimation(fig, update_graph, interval=15, blit=True)
-
-    def update_vio(self, vio_out):
-        if self.should_close: return False
-        view_mat = vio_out.pose.asMatrix()
-
-        for c in 'xyz': self.vio_cam_data[c] = []
-        for vertex in self.cam_wire:
-            p_local = np.array(vertex + [1])
-            p_world = (view_mat @ p_local)[:3]
-            for i, c in enumerate('xyz'):
-                self.vio_cam_data[c].append(p_world[i])
-
-        for c in 'xyz':
-            self.vio_data[c].append(getattr(vio_out.pose.position, c))
-
-        return True
-
-    def update_detected_objects(self, tracked_objects):
-        if self.should_close: return False
-
-        for i in range(3):
-            self.detection_data['xyz'[i]] = np.array([o.position[i] for o in tracked_objects])
-        self.detection_data['labels'] = [o.label for o in tracked_objects]
-
-        return True
-
-    def start_in_parallel_with(self, parallel_thing):
-        thread = threading.Thread(target = parallel_thing)
-        thread.start()
-        plt.show()
-        thread.join()
-
-def draw_detections_on_rgb_frame(frame, detections, fps):
-    # If the frame is available, draw bounding boxes on it and show the frame
-    height = frame.shape[0]
-    width  = frame.shape[1]
-    for detection in detections:
-        # Denormalize bounding box
-        x1 = int(detection.xmin * width)
-        x2 = int(detection.xmax * width)
-        y1 = int(detection.ymin * height)
-        y2 = int(detection.ymax * height)
-        try:
-            label = LABEL_MAP[detection.label]
-        except:
-            label = detection.label
-        if label in SELECTED_LABELS:
-            color = (0, 255, 0)
-            cv2.putText(frame, str(label), (x1 + 10, y1 + 20), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, "{:.2f}".format(detection.confidence*100), (x1 + 10, y1 + 35), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, f"X: {int(detection.spatialCoordinates.x)} mm", (x1 + 10, y1 + 50), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, f"Y: {int(detection.spatialCoordinates.y)} mm", (x1 + 10, y1 + 65), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, f"Z: {int(detection.spatialCoordinates.z)} mm", (x1 + 10, y1 + 80), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-        else:
-            color = (255, 0, 0)
-
-        cv2.rectangle(frame, (x1, y1), (x2, y2), color, cv2.FONT_HERSHEY_SIMPLEX)
-
-    color = (255, 255, 255)
-    cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
-
 if __name__ == '__main__':
     rclpy.init()
     nnBlobPath = 'models/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob'
@@ -373,7 +222,6 @@ if __name__ == '__main__':
     pipeline, vio_pipeline, spatialCalc = make_pipelines(nnBlobPath, showRgb)
 
     with dai.Device(pipeline) as device:
-        visu_3d = MatplotlibVisualization()
 
         detector_node = PersonDetectorNode()
 
@@ -386,9 +234,12 @@ if __name__ == '__main__':
             vio_session = vio_pipeline.startSession(device)
             tracker = make_tracker()
 
+            # If I delete the following line the camera just throws this:
+            # SpectacularAI WARN: IMU buffer max size exceeded, not waiting for more frames
+            # and it freezes
             if showRgb: previewQueue = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
+            
             detectionNNQueue = device.getOutputQueue(name="detections", maxSize=4, blocking=False)
-            xoutBoundingBoxDepthMappingQueue = device.getOutputQueue(name="boundingBoxDepthMapping", maxSize=4, blocking=False)
 
             vio_matrix = None
 
@@ -396,19 +247,9 @@ if __name__ == '__main__':
                 if vio_session.hasOutput():
                     vio_out = vio_session.getOutput()
                     vio_matrix = vio_out.pose.asMatrix()
-                    if not visu_3d.update_vio(vio_out): break
                 elif detectionNNQueue.has():
-                    if showRgb:
-                        inPreview = previewQueue.get()
-                        frame = inPreview.getCvFrame()
-
+                    
                     inDet = detectionNNQueue.get()
-
-                    # TODO: depth hook
-                    #depthFrame = depth.getFrame()
-                    #depthFrameColor = cv2.normalize(depthFrame, None, 255, 0, cv2.NORM_INF, cv2.CV_8UC1)
-                    #depthFrameColor = cv2.equalizeHist(depthFrameColor)
-                    #depthFrameColor = cv2.applyColorMap(depthFrameColor, cv2.COLORMAP_HOT)
 
                     counter+=1
                     current_time = time.monotonic()
@@ -422,46 +263,19 @@ if __name__ == '__main__':
 
                     msg = Point()
 
-                    # This detects everything, not a good solution
-                    # for detection in detections:
-
-                    #     msg.x = detection.spatialCoordinates.x
-                    #     msg.y = detection.spatialCoordinates.y
-                    #     msg.z = detection.spatialCoordinates.z
-
-                    #     detector_node.publisher_.publish(msg)
-
-
-
-                    # if len(detections) != 0:
-                    #     boundingBoxMapping = xoutBoundingBoxDepthMappingQueue.get()
-                    #     roiDatas = boundingBoxMapping.getConfigData()
-
                     if vio_matrix is not None:
                         detections_world = tracker(current_time, detections, vio_matrix)
-                        # visu_3d.update_detected_objects(detections_world)
-
-                        # Coordinates do not match the real ones
-
+                        
                         for detection in detections_world:
                              msg.x = detection.position[0] # distance from camera
                              msg.y = detection.position[1] # horizontal
                              msg.z = detection.position[2] # vertical
 
                              detector_node.publisher_.publish(msg)                        
-
-
-                    # if showRgb:
-                    #     draw_detections_on_rgb_frame(frame, detections, fps)
-                    #     cv2.imshow("rgb", frame)
-
-                    # if cv2.waitKey(1) == ord('q'):
-                    #     break
                 else:
                     time.sleep(0.005)
 
             vio_session.close()
 
-        # visu_3d.start_in_parallel_with(main_loop)
         main_loop()
         

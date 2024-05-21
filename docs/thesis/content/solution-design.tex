@@ -2,11 +2,19 @@
 
 \section{Overview}
 
-TODO
+In this chapter, we present the design and implementation of our solution, focusing on visual mapping and 3D reconstruction. The experiments and methodologies employed in this thesis aim to evaluate the performance and capabilities of various tools and techniques for real-time mapping and object detection.
 
-\section{Mapping}
+Initially, we explored the capabilities of the OAK-D camera using the DepthAI Viewer software to understand its functionalities. This exploration provided insights into the camera's real-time 3D reconstruction and its Vision Processing Unit (VPU) capabilities. Subsequently, we experimented with the Spectacular AI SDK to further test the camera's performance, especially in mapping and person detection scenarios.
 
-In this section we are going to go through the visual mapping part of my thesis.
+We then transitioned to using RTAB-Map for real-time mapping on the Turtlebot4, running ROS2. This involved extensive testing of the RTAB-Map with the OAK-D camera to assess its effectiveness and identify any limitations, particularly in terms of speed and orientation tracking.
+
+Furthermore, we explored advanced techniques for generating photorealistic 3D models of the robot's environment. This involved leveraging Neural Radiance Fields (NeRFs) and Gaussian Splatting to create realistic simulations of the robot's surroundings. These techniques were evaluated using various tools, including Nerfstudio and Luma AI, to determine their feasibility and performance in generating accurate 3D reconstructions.
+
+Overall, this chapter provides a comprehensive overview of the experimental design, methodologies, and outcomes of our efforts to develop an effective solution for real-time mapping and 3D reconstruction using state-of-the-art technologies.
+
+\section{Mapping} \label{mapping}
+
+In this section we are going to go through the visual mapping design part of my thesis.
 
 \subsection{Experimenting with OAK-D}
 
@@ -123,11 +131,46 @@ I saved the most exciting example for the last one of each. As I said earlier th
 	\label{fig:SPAI_depthai}
 \end{figure}
 
-\subsection{RTabMap and person detection}
+\subsection{RTAB-Map}
 
-After experimenting with the camera's examples we continued our journey in the world of mapping. Since the Turtlebot4 is running ROS2 I needed to find a tool that can do the mapping and runs on the said framework.
+After experimenting with the camera's examples we continued our journey in the world of mapping. Since the Turtlebot4 is running ROS2 I needed to find a tool that can do the mapping and runs on the said framework. In this semester we have tried RTAB-Map (Real-Time Appearance-Based Mapping)\cite{RTAB_Map_docs} for mapping.
 
-\section{NeRFs and Gaussian Splatting}
+First I tried out RTAB-Map with the OAK-D camera. It can be launched with the following command:
+\begin{lstlisting}[language=bash,frame=single,float=!ht]
+$ ros2 launch depthai_ros_driver rtabmap.launch.py
+\end{lstlisting}\\
+The launched tool's UI can be seen on Figure \ref{fig:rtabmap_ros}. The top left panel shows the last keyframe captured by the camera, under it we can see the actual image recorded by it. On the right we can inspect the built map. This figure only serves to illustrate the UI of the tool, not the construction of the map, so the output is not spectacular.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=150mm, keepaspectratio]{figures/rtabmap_ros.png}
+	\caption{RTAB-Map ROS2}
+	\label{fig:rtabmap_ros}
+\end{figure}
+
+When the device loses its orientation, it shows the last known position on the bottom left panel. When this happens the mapping stops and we have to navigate back to the exact same position where we lost track to get back on it and continue with the mapping. This is a huge downside of the application because this can happen quite a lot (especially in poor light). Furthermore, we sometimes had to restart the entire mapping process because, although we returned the camera to the last known position, RTAB-Map could not recognise it. Another disadvantage of the tool is its speed; the camera's image lags significantly.
+
+To summarize our experiments, we only tried RTAB-Map while holding the camera by hand, moving and turning very slowly. However, due to the lag and loss of orientation, it was problematic to create a map even in a small room (seen on Figure \ref{fig:rtabmap_nokia}, it can be seen that a lot of irrelevant points are added to the map making it unclear). We believe this issue may persist in the future if we use it on the actual robot, which can turn at high angular speeds. It will likely always lose track, and navigating back to the last known position will be time-consuming and only moderately successful.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=150mm, keepaspectratio]{figures/rtabmap_nokia_office.png}
+	\caption{RTAB-Map ROS generated map of the Nokia office, camera hold by hand}
+	\label{fig:rtabmap_nokia}
+\end{figure}
+
+We tried the iOS version of RTAB-Map as a matter of interest and it worked more effectively than the ROS version with the OAK-D camera. I used the same iPhone 13 Pro as with the Luma AI (\ref{fig:luma_ai_szotyi_toy}). This app can create a mesh or a photorealistic map of our surrounding. When I generated a map it was running much smoother than the ROS version: it was not lagging at all and did not lost track even in rooms with poor light. A generated mesh map can be seen on Figure \ref{fig:rtabmap_ios}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=150mm, keepaspectratio]{figures/rtabmap_ios.png}
+	\caption{RTAB-Map iOS generated mesh map}
+	\label{fig:rtabmap_ios}
+\end{figure}
+
+The holes in the floor are visible because the dark brown laminate reflected the light coming through the window. This made the area that RTAB-Map did not recognize light up due to the diversity of colors.
+
+\section{NeRFs and Gaussian Splatting} \label{nerf_gsplat}
 
 As previously discussed, an additional objective we pursued was to generate 3D photorealistic models of the robot's environment, leveraging images captured during the mapping process. Upon completion of mapping, our aim was to seamlessly integrate the robot's 3D model into this reconstructed scene. This integration would enable real-time simulation of the robot's movements during localization, transcending beyond a mere representation with a point cloud to deliver a highly realistic simulation experience.
 
@@ -230,4 +273,4 @@ AssertionError: block width must be between 2 and 16
 
 As I searched for a solution it soon became clear that this is a very low-level problem with either nerfstudio or the splatfacto model\footnote{\url{https://github.com/nerfstudio-project/gsplat/issues/159}}. I tried upgrading the \verb|gsplat| package but the issue remained.
 
-After the failures we tried another Gaussian Splatting\footnote{\url{https://github.com/graphdeco-inria/gaussian-splatting}} which finally started training but it threw \verb|CUDA out of memory| error every time. I inspected the repository and the developers stated that this works with 24 GB of VRAM. I have a GTX1660 GPU in my laptop with 6 GB of VRAM thus it was not enough for training. I tried using Google Colab for training but after it finished it had problems with saving the splats because the command always stopped with Out Of Memory errors and I was left there without the finished splat. My advisor, Gábor tried training on his GTX1080 and fortunately it had enough VRAM to finish it but the result is not worth even an image here because it was too blurry.
+After the failures we tried another Gaussian Splatting implementation\footnote{\url{https://github.com/graphdeco-inria/gaussian-splatting}} which finally started training but it threw \verb|CUDA out of memory| error every time. I inspected the repository and the developers stated that this works with 24 GB of VRAM. I have a GTX1660 GPU in my laptop with 6 GB of VRAM thus it was not enough for training. I tried using Google Colab for training but after it finished it had problems with saving the splats because the command always stopped with Out Of Memory errors and I was left there without the finished splat. My advisor, Gábor tried training on his GTX1080 and fortunately it had enough VRAM to finish it but the result is not worth even an image here because it was too blurry.

@@ -33,9 +33,27 @@
 \end{itemize}
 
 \section{May 28 -- June 4}
+\begin{itemize}
+\item presentation
+\end{itemize}
+
 \section{May 21 -- May 28}
+\begin{itemize}
+\item report writing, finalization
+\end{itemize}
+
 \section{May 14 -- May 21}
+\begin{itemize}
+\item testing 3D person detection on Turtlebot4
+\item report writing
+\end{itemize}
+
+
 \section{May 07 -- May 14}
+\begin{itemize}
+\item testing SPAI pose estimation on Turtlebot4
+\item testing 3D person detection on Turtlebot4
+\end{itemize}
 \newpage
 
 \section{April 30 -- May 07}
@@ -64,6 +82,10 @@ Some links on traditional 3D maps:
 \item MeshNavigation \url{https://github.com/naturerobots/mesh_navigation}
 \item RTAB-Map: \url{https://introlab.github.io/rtabmap/}
 \item maplab, maplab 2.0 \url{https://maplab.asl.ethz.ch/docs/master/index.html}
+\item FUEL: Boyu Zhou, Yichen Zhang, Xinyi Chen, and Shaojie Shen. Fuel: Fast
+uav exploration using incremental frontier structure and hierarchical
+planning. IEEE Robotics and Automation Letters, 6(2):779–786, 2021.
+\item [2024] Zeng - Autonomous Implicit Indoor Scene Reconstruction with Frontier Exploration (arxiv)
 \end{itemize}
 \newpage
 
@@ -71,10 +93,11 @@ Some links on traditional 3D maps:
 
 \subsection{Tasks}
 \begin{itemize}
-\item person detector + estimate 3D position of person \todo[color=blue!30]{IN PROGRESS}
-\item try DepthAI RTAB-Map ROS \url{https://github.com/luxonis/depthai-ros/blob/humble/depthai_ros_driver/launch/rtabmap.launch.py} \todo[color=blue!30]{IN PROGRESS}
-\item Optional: try RTAB-MAP iOS \url{https://apps.apple.com/ca/app/rtab-map-3d-lidar-scanner/id1564774365}
-\item try to load and continue a SPAI map
+\item person detector + estimate 3D position of person \todo[color=green!30]{DONE}
+\item try DepthAI RTAB-Map ROS \url{https://github.com/luxonis/depthai-ros/blob/humble/depthai_ros_driver/launch/rtabmap.launch.py} \todo[color=green!30]{DONE}
+\item Optional: try RTAB-MAP iOS \url{https://apps.apple.com/ca/app/rtab-map-3d-lidar-scanner/id1564774365} \todo[color=green!30]{DONE}
+\item try to load and continue a SPAI map \todo[color=blue!30]{IN PROGRESS}
+\item Laci: try out this \url{https://docs.luxonis.com/en/latest/pages/slam_oak/}
 \end{itemize}
 
 \subsection{Achievements}
@@ -91,7 +114,26 @@ Some links on traditional 3D maps:
         \centering
         \includegraphics[width=1\linewidth]{images/rtabmap_ros.png}
         \captionof{figure}{RTabmap in action}
-    \end{minipage}
+    \end{minipage}\par
+    I tried testing it afternoon. Sometimes it does not want to load the 3D map section at all. When I build a map it always pauses itself because it wants to detect loop closures. It is really hard to go back to the position it wants to close the loop with especially in darker places. I think it will be quite difficult to use it on the real robot if it is going to produce these problems.
+
+    \item When I tried to replay a bigger mapping with SPAI's \verb|mapping_visu.py| it could not reach the end of it because its buffer only accepts a maximum of 100 images.
+    \item Loading and continuing a SPAI map will be quite tricky because the mapping examples are just able to record a mapping or replay a previously recorded one. I could not find a way to continue a recorded map. It will be possible maybe by tinkering with the sdk (we have to write a custom script) or with these: \url{https://docs.luxonis.com/en/latest/pages/slam_oak/}, \url{https://iopscience.iop.org/article/10.1088/1742-6596/2467/1/012029/pdf}
+    \item RTabmap iOS:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/rtabmap_ios.png}
+        \captionof{figure}{RTabmap iOS generated mesh}
+    \end{minipage}\par
+
+    \item We tried out RTabmap with Gabor in the office and we saved the point cloud map:\par
+    \begin{minipage}{\linewidth}
+        \centering
+        \includegraphics[width=1\linewidth]{images/point_cloud_nokia_office.png}
+        \captionof{figure}{RTabmap generated point cloud at Nokia}
+    \end{minipage}\par
+
+    \item This publishes detections: \url{https://github.com/tiiuae/depthai_ctrl}
     
 \end{itemize}
 \newpage

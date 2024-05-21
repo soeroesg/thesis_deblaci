@@ -1,4 +1,4 @@
-\chapter{Related works}
+\chapter{Related works} \label{related_works}
 
 \section{ROS2}
 
@@ -10,13 +10,27 @@ One of the most exciting advantage of using this framework is that we can create
 
 \section{Turtlebot4}
 
-At Nokia we worked on a Turtlebot4\footnote{\url{https://clearpathrobotics.com/turtlebot-4/}} to achieve our goals. It is based on an iRobot® Create3\footnote{\url{https://edu.irobot.com/what-we-offer/create3}} mobile base and it is equipped with lots of tools and sensors. Create3 is a robot vacuum cleaner's base made for educational use by iRobot. It contains the differential drive, the IR proximity sensors in the front and the docking station for charging. All in all it can be used to build more complex mobile robots.
+At Nokia we worked on a Turtlebot4\footnote{\url{https://clearpathrobotics.com/turtlebot-4/}} and a notebook above it on the platform to achieve our goals. The camera and the LIDAR is connected to the robot via USB and the robot is connected to the notebook via Gigabit Ethernet so they can communicate on ROS topics. A diagram of the mentioned structure can be examined on Figure \ref{fig:mobile_robot_architecture}. The robot is based on an iRobot® Create3\footnote{\url{https://edu.irobot.com/what-we-offer/create3}} mobile base and it is equipped with lots of tools and sensors. Create3 is a robot vacuum cleaner's base made for educational use by iRobot. It contains the differential drive, the IR proximity sensors in the front and the docking station for charging. All in all it can be used to build more complex mobile robots. An image of the two editions of the robot can be seen on Figure \ref{fig:turtlebot4}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=75mm, keepaspectratio]{figures/turtlebot4_architecture.png}
+    \caption{Architectural diagram of the mobile robot system at Nokia Bell Labs}
+    \label{fig:mobile_robot_architecture}
+\end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=150mm, keepaspectratio]{figures/TurtleBot4.jpg}
     \caption{Turtlebot4 Lite (left) and Turtlebot4 (source:\cite{Turtlebot4Pic})}
     \label{fig:turtlebot4}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/turtlebot4_nokia.JPEG}
+    \caption{Turtlebot4 at Nokia Bell Labs}
+    \label{fig:turtlebot4_nokia}
 \end{figure}
 
 \subsection{Raspberry Pi 4}
@@ -57,6 +71,14 @@ Then the OAK-D Pro:
     \item it supports active stereo,
     \item it has IR illumination for night vision.
 \end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=150mm, keepaspectratio]{figures/oak_d_pro_nokia.JPEG}
+    \caption{OAK-D Pro on a Turtlebot4 at Nokia Bell Labs}
+    \label{fig:oak_d_pro_nokia}
+\end{figure}
+
 The active stereo\cite{Stereo} is quite interesting, let's review it in a few words. Passive stereo uses the two cameras to calculate the distances between the camera and the objects thus we can create a 3D map or point cloud of our surroundings with it. This method works optimally in environments with diverse surfaces because it can only calculate the distances if the two cameras can see the exact same points on their images. In case we point the camera to a monotonous surface (for example a clean white wall) it will not be able to calculate the distances due to the miss of matching points. On the contrary, active stereo cameras project a dot matrix so they are able to find matching points even on monotonous surfaces.
 
 \begin{figure}[H]

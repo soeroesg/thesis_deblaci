@@ -11,7 +11,7 @@
 \newcommand{\vikszerzoVezeteknev}{Debreczeni}
 \newcommand{\vikszerzoKeresztnev}{László}
 
-\newcommand{\vikkonzulensAMegszolitas}{dr.~}
+\newcommand{\vikkonzulensAMegszolitas}{}
 \newcommand{\vikkonzulensAVezeteknev}{Sörös}
 \newcommand{\vikkonzulensAKeresztnev}{Gábor}
 
@@ -39,6 +39,12 @@
 \input{include/thesis-en}
 
 \input{include/preamble}
+
+
+\usepackage{enumitem} % this is needed for reducing the space betwen enumeration items
+\newcommand{\LD}[1]{\textcolor{cyan}{GH: \em#1}}
+\newcommand{\GS}[1]{\textcolor{orange}{GS: \em#1}}
+
 
 %--------------------------------------------------------------------------------------
 % Table of contents and the main text
@@ -79,7 +85,9 @@
 %TODO import your own content
 \include{content/introduction}
 \include{content/related-works}
-\include{content/solution-design}
+\include{content/experiments-oak_d}
+\include{content/experiments-nerf_gaussian_splat}
+\include{content/experiments-rtab_map}
 \include{content/implementation}
 \include{content/future-plans}
 

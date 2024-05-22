@@ -3,10 +3,9 @@
 %----------------------------------------------------------------------------
 
 \section{Motivation}
+Navigation of mobile robots has been a very active research area worldwide. It is essential for these autonomous vehicles to thoroughly explore their surroundings before starting their tasks. It is not advised for any of them to go wandering in their environment because they will get lost or bump into obstacles.
 
-Nowadays mobile robots' navigation is researched worldwide. If we think about it, it is essential for these autonomous vehicles to thoroughly explore their surroundings before starting their tasks. It is not advised for any of them to go wandering in their environment because they will get lost.
-
-One of the simplest examples is a robot vacuum cleaner. To make things more exciting I can provide some firsthand experiences because I own an iRobot Roomba 780 and my parents own an iRobot Roomba i7. The 780 is an older model from 2010, it just wanders from wall to wall in the house, it does not use any localization or mapping at all. On the other hand, the i7 has a camera on top of it which can see the ceiling of the rooms. At the first run it executes a mapping sequence, so it just goes around the rooms without "thinking". After the mapping has finished we can see the mapped rooms on the app. The i7 is much more flexible because it knows where is its docking station and it can fully localize itself in the rooms so it can vacuum systematically. On the contrary, the 780 just goes around, from wall to wall, hectically like a lunatic.
+One of the simplest examples of an autonomous agent is a robot vacuum cleaner. I can provide some firsthand experiences, because I own an iRobot Roomba 780 and my parents own an iRobot Roomba i7. The 780 is an older model from 2010, it just wanders from wall to wall in the house, it does not perform any localization or mapping, it measures its movements simply based on the wheel rotations, and it turns around when it bumps into an object. On the other hand, the i7 has a camera on top (even though it is of very low resolution for privacy reasons), which can see the ceiling of the rooms. At the first run, the robot executes an autonomous mapping sequence, so it goes around in the rooms and maps out the space. After the mapping has finished, we can see the map of the apartment in the companion app. The i7 is much more flexible, because it knows where its docking station is located, it can distinguish individual rooms, and it can localize itself in the apartment, and so it can vacuum systematically.
 
 \begin{figure}[H]
 	\centering
@@ -16,7 +15,7 @@ One of the simplest examples is a robot vacuum cleaner. To make things more exci
 	\label{fig:Roombas}
 \end{figure}
 
-With this little example we reviewed the advantages of SLAM (Simultaneous localization and mapping) in a housekeeping environment. Mobile robots and SLAM can be used in various industrial environments, too. For example, autonomous robots can carry heavy products from one place to another in a huge warehouse. In these cases it is unimaginable that a wall-to-wall algorithm could achieve a proper navigation (it is questionable if it would even arrive to its goal before draining its battery). All in all, nowadays it is very important to use some SLAM algorithm.
+As this illustrative example shows, the advantages of SLAM (simultaneous localization and mapping) in a housekeeping environment is clear. Mobile robots and SLAM can be used in various industrial environments too. For example, autonomous robots can carry heavy products from one place to another in a huge warehouse. In these cases it is unimaginable that a wall-to-wall algorithm could achieve efficient navigation (it is questionable if it would even arrive to its goal before draining its battery). All in all, nowadays it is very important to use some SLAM algorithm.
 
 \section{Goal of the thesis}
 
@@ -26,10 +25,10 @@ The main goal is to use V-SLAM (Visual-SLAM) with a stereo camera instead of SLA
 \begin{itemize}
     \item a camera can easily build 3D maps or point clouds of the robots' surroundings,
     \item if the camera has RGB lenses than we can create colorful point clouds of its environment,
-    \item the camera can be used to detect specific objects.
+    \item the camera can be used to detect and recognize objects.
 \end{itemize}
 One of our goals was to detect persons with the camera and prepare the robot to be able to follow or avoid them.
 
 \section{Structure of the thesis}
 
-While working on my thesis I have gained significant experience in many fields. First I learned about mobile robots, the OAK-D cameras and Gaussian Splatting in Chapter \ref{related_works}, then I digged deeper in the capabilities of the OAK-D camera and RTAB-Map in Section \ref{mapping}. After this I experimented with NeRFs and Gaussian Splatting in Section \ref{nerf_gsplat}. Then, I started the implementation of the mapping and the person detector in Chapter \ref{implementation}. Last but not least we suggested some future plans for the next semester in Chapter \ref{future_plans}.
+During the first semester of my thesis project, I have gained significant experience in many fields. First, I learned about mobile robots, OAK-D cameras and neural reconstruction in Chapter~\ref{related_works}, then I digged deeper in the capabilities of the OAK-D camera in Chapter~\ref{experiments_oak_d}, experimented with NeRFs and Gaussian Splatting in Chapter~\ref{nerf_gsplat}. After these I gained experience in RTAB-Map in Chapter~\ref{experiments_rtab_map}. Then, I started the implementation of the mapping and the person detector in Chapter~\ref{implementation}. Last but not least we suggested some future plans for the next semester in Chapter~\ref{future_plans}.

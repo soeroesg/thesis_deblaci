@@ -20,7 +20,6 @@ def generate_launch_description():
     return LaunchDescription(
         [
             DeclareLaunchArgument("use_rviz", default_value='True'),
-            DeclareLaunchArgument("recordingFolder", default_value='')
         ] + [
             OpaqueFunction(function=launch_setup)
         ]

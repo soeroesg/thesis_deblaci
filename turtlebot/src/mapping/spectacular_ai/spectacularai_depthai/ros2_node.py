@@ -85,6 +85,8 @@ class SpectacularAINode(Node):
     def __init__(self):
         super().__init__("spectacular_ai_node")
         self.declare_parameter('recordingFolder', rclpy.Parameter.Type.STRING)
+        self.declare_parameter('recordingAndSlam', rclpy.Parameter.Type.BOOL)
+
 
         self.odometry_publisher = self.create_publisher(PoseStamped, "/slam/odometry", PUBLISHER_QUEUE_SIZE)
         self.keyframe_publisher = self.create_publisher(PoseStamped, "/slam/keyframe", PUBLISHER_QUEUE_SIZE)
@@ -100,10 +102,11 @@ class SpectacularAINode(Node):
         config = spectacularAI.depthai.Configuration()
 
         recordingFolder = str(self.get_parameter('recordingFolder').value)
+        recordingAndSlam = bool(self.get_parameter('recordingAndSlam').value)
         if recordingFolder:
             self.get_logger().info("Recording: " + recordingFolder)
             config.recordingFolder = recordingFolder
-            config.recordingOnly = True
+            config.recordingOnly = not recordingAndSlam
 
         config.internalParameters = {
             "ffmpegVideoCodec": "libx264 -crf 15 -preset ultrafast",

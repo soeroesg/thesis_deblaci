@@ -11,6 +11,7 @@ def launch_setup(context, *args, **kwargs):
         executable='ros2_node',
         parameters=[
             { 'recordingFolder': LaunchConfiguration("recordingFolder") },
+            { 'recordingAndSlam': LaunchConfiguration("recordingAndSlam") }
         ],
     )
 
@@ -22,7 +23,8 @@ def launch_setup(context, *args, **kwargs):
 def generate_launch_description():
     return LaunchDescription(
         [
-            DeclareLaunchArgument("recordingFolder", default_value='')
+            DeclareLaunchArgument("recordingFolder", default_value=''),
+            DeclareLaunchArgument("recordingAndSlam", default_value='false')
         ] + [
             OpaqueFunction(function=launch_setup)
         ]

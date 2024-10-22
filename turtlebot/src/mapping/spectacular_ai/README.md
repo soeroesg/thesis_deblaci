@@ -49,3 +49,12 @@ In case you want to record the mapping and do SLAM simultaneously, run this on t
 ros2 launch launch/mapping_turtlebot.py recordingFolder:=recordings recordingAndSlam:=true
 ```
 This way the SLAM will be a bit slower but it did not fail at all for me.
+
+## Published topics by the node
+
+- /slam/odometry
+- /slam/keyframe
+- /slam/left
+- /tf
+- /slam/pointcloud
+- /slam/camera_info
